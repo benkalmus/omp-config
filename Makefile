@@ -1,4 +1,4 @@
-PACKAGES := pi
+PACKAGES := omp
 
 .PHONY: all stow unstow restow backup
 
