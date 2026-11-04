@@ -1,0 +1,80 @@
+modelRoles:
+  default: openrouter/deepseek/deepseek-v4.1-flash-1017
+  slow: openrouter/meta/muse-spark-1.3-contributor:high
+  smol: openrouter/z-ai/glm-5.3-flash
+  task: "@default"
+  plan: "@slow"
+prewalk:
+  enabled: false
+  auto: suggest
+ask:
+  enabled: true
+  notify: "off"
+task:
+  structured: true
+  enableLsp: true
+astGrep:
+  enabled: true
+plan:
+  defaultOnStartup: true
+symbolPreset: unicode
+composer:
+  shape: pi
+theme:
+  dark: titanium
+  light: light
+setupVersion: 2
+statusLine:
+  preset: full
+completion:
+  notify: "off"
+bash:
+  patterns:
+    - match: "*--no-verify*"
+      approval: deny
+    - match: sudo
+      approval: deny
+    - match: sudo *
+      approval: deny
+    - match: git push*
+      approval: deny
+    - match: git pull*
+      approval: deny
+    - match: git fetch*
+      approval: deny
+    - match: git rebase*
+      approval: deny
+    - match: git merge*
+      approval: deny
+    - match: git cherry-pick*
+      approval: deny
+    - match: git reset --hard*
+      approval: deny
+    - match: env
+      approval: deny
+    - match: env *
+      approval: deny
+    - match: printenv*
+      approval: deny
+    - match: "* .env"
+      approval: deny
+    - match: "* .env.*"
+      approval: deny
+    - match: python -c*
+      approval: deny
+    - match: python3 -c*
+      approval: deny
+    - match: node -e*
+      approval: deny
+    - match: node --eval*
+      approval: deny
+    - match: rm -rf /*
+      approval: deny
+    - match: rm -f
+      approval: deny
+    - match: rm -f *
+      approval: deny
+    - match: rm -rf*
+      approval: deny
+    - match: rm -fr*
+      approval: deny
