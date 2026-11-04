@@ -1,0 +1,25 @@
+# omp reads this from ~/.omp/agent/keybindings.yml.
+# Action ids live in packages/tui/src/app-keybindings.ts.
+# omp has no leader key, so every binding is one chord.
+
+# opencode session.list
+app.session.resume: Ctrl+S
+
+# opencode model.list, taking the chord from app.tools.expand
+app.model.selectTemporary: Ctrl+O
+app.tools.expand: Alt+O
+
+# opencode session.new
+app.session.new: Ctrl+N
+
+# opencode session.toggle.thinking, which omp defaults to Ctrl+T
+app.thinking.toggle: Ctrl+Y
+
+# Legacy alias of app.agents.hub, and both default to Ctrl+S
+app.session.observe: []
+
+# Defaults pinned so an omp release cannot move them silently
+app.agents.hub: Alt+A
+app.model.select: Alt+M
+app.plan.toggle: Alt+Shift+P
+app.history.search: Ctrl+R
