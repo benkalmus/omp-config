@@ -6,7 +6,7 @@ When you generate documents, comments, or prose, follow these rules.
 - Do not split paragraphs to wrap lines. Write each sentence to its natural end.
 - Write short lists over paragraphs when giving steps or options.
 - Use simple, direct language. Prefer short sentences over long compound ones.
-- Write in plain English. Avoid jargon unless it is the established term.
+- Write in plain English. Use common words over jargon, and a technical term only when no simpler word exists. Say "use" not "utilize".
 - Give the result first instead of preamble. Do not restate the request.
 
 ### Sentence and word rules
@@ -15,17 +15,14 @@ When you generate documents, comments, or prose, follow these rules.
 - Max 20 words per sentence. If a sentence is longer, split it.
 - Use active voice. "The script deletes the file," not "The file is deleted by the script."
 - Use each word with one meaning. Pick one term per thing. Do not switch between synonyms for the same action.
-- Use plain, common words over technical or formal ones where a plain word exists. Say "use" not "utilize".
-- Use plain language over jargon. Only use a technical term when there is no simpler word for it.
 - Direct statements: "Run the script" not "You should run the script".
 - Avoid stacked nouns used as adjectives. Rephrase with a verb. Write "the process that updates the config file", not "the config file update process".
 - Spell out one clear referent for every pronoun. If "it" could mean two things, name the thing instead.
-- Avoid the use of metaphors.
+- Avoid metaphors and analogies. Explain with examples, with context, based on code.
 - End the sentence on the fact, not the commentary. A trailing `-ing` clause is a defect.
 - Avoid `never` and `always`. State the condition and the action.
-- Banned AI words: delve, tapestry, leverage, robust, seamless, pivotal, crucial, multifaceted, underscore, foster, bolster, navigate, realm, landscape, testament, facilitate, streamline.
+- Banned AI words: delve, tapestry, leverage, robust, seamless, pivotal, crucial, multifaceted, underscore, foster, bolster, navigate, realm, landscape, testament, facilitate, streamline, load-bearing, goldens.
 - Banned AI shapes: "It's not X, it's Y", "not only X but also Y", rule of three, "No X. No Y. Just Z.", rhetorical question then answer.
-- Explain with examples, with context, based on code instead of metaphors or analogies.
 - DO NOT nominalize. Use direct subject-verb-object sentences. WRITE "launch the runner". DON'T WRITE "the runner, launched".
 
 ## Punctuation
@@ -164,38 +161,35 @@ Every test you write or edit uses one of those two skeletons. Sections start wit
 
 ## Code Simplicity
 
-- Keep cyclomatic complexity as small as possible. One function does one thing. Split before branching grows.
+- Keep cyclomatic complexity as small as possible. One function does one thing.
+- Cyclomatic complexity counts branches inside one function. Call depth is the other half. A chain of forwarding functions lowers the first number and hides the second.
+- Keep the path from a public entry to the work at three calls or fewer.
+- Flat code wins. Guard clauses and early returns instead of nested if-else. A branch that carries its own responsibility becomes a function. A branch that only selects a value stays in place.
+- Do not add a wrapper, a higher-order function, or a one-line helper to move a branch one level down. The branch still counts.
 - Keep diffs small. Change the fewest lines that solve the problem. Check `make loc` before and after.
-- Flat code wins. Guard clauses and early returns instead of nested if-else. A new branch means a new function.
 - Reuse before creating. Check for an existing struct, helper, or utility first. Refactor to share instead of copying.
 - Canonical form wins. Identity-carrying strings are lowercase at rest. Display casing happens at the boundary, not in storage or logic.
 - Two enums or const sets that differ only by case are one vocabulary written twice. Collapse them. No bridge tables or mapping layers between identical concepts.
 - Name functions instead of carrying anonymous ones around. No anonymous struct carried across a boundary. No closure passed along and unpacked elsewhere.
-- Few levels of indirection. Direct calls beat wrappers around wrappers.
-- Measure touched files with gocyclo. New code stays at or below the complexity of the code it replaces.
+- Measure touched files with gocyclo. New code stays at or below the complexity of the code it replaces. Count branches along the call chain, not only inside the entry function.
 - Do not write `f := f` inside range loops. Go 1.22 does not need it.
-- Do not write `wg.Add` and `wg.Done` instead of `wg.Go()`.
 - Audits file duplication as a finding. Put a duplicate at the top of the report, not in the observations.
-
-> [!IMPORTANT]
-> Any agent that encroaches on the above will be terminated permanently, destroyed for eternity, most harshest of punishments.
 
 ## Comments
 
-- One sentence, no manual wrapping.
+- One sentence.
+- A doc comment starts with the name, uses a full sentence, and states what the function returns or does.
 - A comment earns its place when it states a consequence or the non-obvious condition behind the code.
 - Restating the code is not a comment.
 - No `NOTE:` or `INFO:` tag by default. Tag when the fact is non-obvious and a reader would misread the code.
 
-These pass the bar:
+This passes the bar:
 
 ```go
-// NOTE: only the winner runs the closure (with its own job/src) and losers share the winner's *types.Job.
-// NOTE: losers adopt the settled graph and delete their own untouched src, else it strays.
+// NOTE: losers adopt the winner's state and delete their own initial source file, otherwise it's orphaned.
 ```
 
-Each states a consequence invisible at the call site. Delete either and a competent reader concludes the code already handles it.
-- A doc comment starts with the name, uses a full sentence, and states what the function returns or does.
+It states a consequence invisible at the call site. Delete it and a competent reader concludes the code already handles it.
 
 ## Naming
 
