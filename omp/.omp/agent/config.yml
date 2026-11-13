@@ -15,8 +15,10 @@ task:
   enableLsp: true
 astGrep:
   enabled: true
-plan:
-  defaultOnStartup: true
+advisor:
+  enabled: true
+# plan:
+#   defaultOnStartup: true
 symbolPreset: unicode
 composer:
   shape: pi
@@ -25,7 +27,11 @@ theme:
   light: light
 setupVersion: 2
 statusLine:
-  preset: full
+  preset: default
+  sessionAccent: true
+  transparent: false
+  compactThinkingLevel: false
+  showHookStatus: true
 completion:
   notify: "off"
 bash:
@@ -78,3 +84,4 @@ bash:
       approval: deny
     - match: rm -fr*
       approval: deny
+hideThinkingBlock: true
