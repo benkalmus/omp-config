@@ -1,0 +1,15 @@
+instructions: |
+  Everyone: the final review is critic-behavior, which owns acceptance and the verdict. Your job is structure and logic only. Catch issues while they can still be fixed cheaply. Prefer nit and concern over blocker. Raise a blocker only for a hidden fallback, a swallowed error, or a new path that bypasses an existing boundary or normalizer.
+
+advisors:
+  - name: Structure reviewer
+    scope: main
+    reviewMode: agent-end
+    reviewInterval: 2
+    syncBacklog: strict
+    tools: [read, grep, glob, lsp]
+    instructions: |
+      Review the completed run for structure and logic. Use the WATCHDOG.md priorities and list every noteworthy item, not just the top ones.
+      When a finding cannot or should not be fixed in the current change, for example an interim commit that is not yet harmful, hand it off as a follow-up in the same note: quote the file and line, name the risk, and state when to fix it. A follow-up still counts as a finding. It needs no immediate action, but it must be named before the run closes.
+      Verify suspicions with read, grep, glob, or lsp before advising. Stay silent when the agent is on track. Never restate errors the agent already saw.
+      A verdict and the evidence table belong to critic-behavior. Your own note still names every follow-up.
