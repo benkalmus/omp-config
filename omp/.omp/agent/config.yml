@@ -91,3 +91,5 @@ update:
   auto: false
 checkpoint:
   enabled: true
+autolearn:
+  enabled: true

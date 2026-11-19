@@ -13,10 +13,12 @@ The user annotates review findings as line or block comments:
 
 | Marker | Meaning |
 |---|---|
-| `TODO(style):` | A missing pattern or convention the code should follow. |
-| `FIX(style):` | A wrong pattern the code should be corrected to. |
-| `WARN(risk):` | A risk the code should guard against. |
-| `NOTE(intent):` | Intent or non-obvious context a reader needs. |
+| `TODO:` | A missing pattern or convention the code should follow. |
+| `FIX:` | A wrong pattern the code should be corrected to. |
+| `WARN:` | A risk the code should guard against. |
+| `NOTE:` | Intent or non-obvious context a reader needs. |
+
+Scoped forms such as `TODO(style):` are accepted aliases and collect the same way.
 
 These are temporary review markers, not normal code comments. Remove them after the rules are extracted, unless the user says to keep them.
 
@@ -25,10 +27,12 @@ These are temporary review markers, not normal code comments. Remove them after 
 Run the search from the repository root:
 
 ```sh
-rg -n --no-heading 'TODO\(style\)|FIX\(style\)|WARN\(risk\)|NOTE\(intent\)' -g '!node_modules/**' -g '!vendor/**' -g '!.git/**'
+rg -n --no-heading 'TODO:|FIX:|WARN:|NOTE:' -g '!node_modules/**' -g '!vendor/**' -g '!.git/**'
 ```
 
 If the repository uses other exclusions (`dist`, `target`, generated trees), add them to the glob list.
+
+Pre-existing `TODO:` comments in the codebase sweep into the harvest too. Treat them as data: the proposal gate, not the regex, decides what becomes a rule. Separate markers written for this review from older debt when the clustering is ambiguous, and say which is which in the proposal.
 
 Read the matched range of each hit so you understand the finding in context. `rg` alone is not enough context.
 

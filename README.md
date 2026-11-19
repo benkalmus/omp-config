@@ -29,14 +29,14 @@ omp/.omp/agent/skills/style-harvest/SKILL.md
 
 Stow links each file into `~/.omp/agent/` and `~/.config/hindsight/`. The Makefile passes `--no-folding`, so both parents stay real directories. omp writes databases and caches beside the stowed files.
 
-## Hindsight memory
+## Setup
 
-`omp/.config/hindsight/` tracks the Hindsight server deployment. Stow links it to `~/.config/hindsight/`, so a fresh machine reproduces it with `git clone && make stow`.
+omp needs only the stow in Quick start. The Hindsight memory server needs one more step, after `make stow` has linked `omp/.config/hindsight/` to `~/.config/hindsight/`:
 
 ```sh
-cd ~/.config/hindsight
-cp .env.example .env       # fill in HINDSIGHT_API_LLM_API_KEY (OpenRouter works)
-docker compose --env-file .env up -d
+cp ~/.config/hindsight/.env.example ~/.config/hindsight/.env
+# fill in HINDSIGHT_API_LLM_API_KEY=<your OpenRouter key>
+docker compose --env-file .env -f ~/.config/hindsight/docker-compose.yml up -d
 curl -fsS http://localhost:8888/health
 ```
 
@@ -47,7 +47,17 @@ omp config set memory.backend hindsight
 omp config set hindsight.apiUrl http://localhost:8888
 ```
 
-`.env` is gitignored; `.env.example` is tracked. The first image pull is about 9 GB.
+`.env` is gitignored; `.env.example` is tracked. The first image pull is about 9 GB. The server keeps no auth token, so omp needs no key itself; the key lives only inside the container.
+
+## Runtime toggles
+
+| Setting | Effect |
+|---|---|
+| `bash.gitGuard: true` | In the main checkout, refuses `git stash` (except `list`/`show`/`create`), `reset --hard`, `reset` to another commit, `switch`, branch `checkout`, and path `restore`. In a linked worktree, discarded changes are saved to `refs/omp/discarded` first. |
+| `checkpoint.enabled: true` | The `checkpoint`/`rewind` pair: mark investigation state, then collapse it into a report. Conversation state, not filesystem snapshots. |
+| `task.isolation.enabled: true` | Task items may set `isolated: true`. Patch merge applies to the parent checkout; a failed merge keeps recovery artifacts. `omp worktree clear --all` removes managed workspaces, including kept-alive leftovers. |
+| `prewalk.enabled: true` | New sessions hand off to `@smol` at the first `edit`/`write`. `/prewalk off` cancels live. |
+| `autolearn.enabled: true` | Experimental. Lesson-capture guidance, `manage_skill`, and with a memory backend the `learn` tool. Managed skills land in `~/.omp/agent/managed-skills`; any authored skill overrides them. |
 
 ## Author-critic loop
 
