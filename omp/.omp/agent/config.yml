@@ -2,6 +2,7 @@ modelRoles:
   default: openrouter/deepseek/deepseek-v4.1-flash-1017
   slow: openrouter/meta/muse-spark-1.3-contributor:high
   smol: openrouter/z-ai/glm-5.3-flash
+  advisor: openrouter/z-ai/glm-5.3-flash
   task: "@default"
   plan: "@slow"
 prewalk:
