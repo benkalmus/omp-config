@@ -50,7 +50,7 @@ Add any other generated tree to the exclusions. Read the matched range of each h
 
 Annotations often cover more than formatting: package boundaries, file layout, dependency direction, ownership, error flow, and when to extract or inline. Read enough surrounding code to recover the lesson, not only the line.
 
-Pre-existing markers in the codebase sweep into the harvest too. Treat them as data: the approval gate, not the regex, decides what becomes a rule. Separate markers written for this review from older debt when the clustering is ambiguous, and say which is which.
+Markers from outside the current review enter the harvest too; Triage classifies their origin.
 
 ## Cluster
 
@@ -66,13 +66,30 @@ Group annotations by the lesson they imply, not by file or repository:
 
 Discussion happens before any proposal. One annotation often implies several lessons, and the user holds the context that separates them. Treat the discussion as the main work of the harvest, not a formality.
 
-For each cluster, present a compact block:
+Write each cluster as a markdown section with `##` headings and full sentences. Do not compress a cluster into a table or a chain of fragments. Give the context, the reasoning, and concrete examples instead of a summary.
 
-- **Evidence**: the `file:line` rows and the marker text.
-- **Inferred lesson**: your reading, one sentence.
-- **Adjacent lessons**: other rules the same evidence suggests, each phrased as a question.
-- **Edge cases**: conditions, exceptions, or domains where the rule would misfire.
-- **Conflict**: an existing `RULES.md` bullet this contradicts or overlaps, quoted with its section.
+A cluster section carries the evidence rows with file and line, the inferred lesson as a full sentence, why the lesson matters in context, the adjacent lessons the same evidence suggests, the edge cases where the rule would misfire, the conflicting `RULES.md` bullet when one exists, and the decision you need from the user. Write the adjacent lessons as questions with their evidence, not as a bare list of topics.
+
+Example shape:
+
+```markdown
+## Cluster: transaction boundary
+
+Three markers describe one lesson. `store/tx.go:12` marks a `FIX` where a service calls Begin, `service/save.go:41` warns that the retry loop can commit half a write, and `repo/query.go:30` records the decision that only the repository opens transactions.
+
+The inferred lesson is that transaction boundaries belong to the repository, and services never begin, commit, or roll back directly. Without the rule, a service retry can commit half a write and a rollback can discard another caller's work.
+
+Adjacent lessons I see:
+
+- Should a `*sql.Tx` ever cross the service interface? `service/save.go:55` suggests not.
+- Do batch imports need an explicit unit of work? `repo/import.go:21` defers this in a TODO.
+
+Edge cases: read-only queries, retry with idempotency keys, nested imports.
+
+No `RULES.md` conflict exists today.
+
+Decision needed: is "one writer per transaction" a global rule or a Go-only idiom?
+```
 
 Ask targeted questions and batch them. Challenge the user's instruction when it over-generalizes, contradicts an existing rule, or cannot pass the portability test. Name the specific evidence and the cost of the wrong reading. When the user overrides a conflict or answers a doubt, record the decision in the proposal so the next harvest does not reopen it.
 
@@ -128,6 +145,8 @@ After the clusters are settled, write the proposal to `local://rule-harvest-<dat
 - `Destination` is a `RULES.md` section, `managed skill`, `memory`, or `<repo> AGENTS.md`.
 - `Proposed wording` is the exact bullet text, short enough to merge.
 - `Conflict` names an existing bullet this replaces or contradicts, or `none`.
+
+Below the table, add one `### Rule N` block for every rule where an example clarifies the lesson. Keep the example short: a before/after pair or a minimal illustration in the repository's language or a neutral form. The example lives in the proposal; the `RULES.md` bullet stays one sentence, so the permanent token cost is unchanged.
 
 Also propose:
 
