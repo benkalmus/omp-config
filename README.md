@@ -69,7 +69,7 @@ The opencode setup has one primary agent and three subagents. omp has no selecta
 | `critic-structure` (subagent) | `agents/critic-structure.md` | Read-only task agent, discovered by name. |
 | `critic-behavior` (subagent) | `agents/critic-behavior.md` | Read-only task agent with `bash` for test runs. |
 | `subtractor` (subagent) | `agents/subtractor.md` | Task agent with `blocking: true`, so it runs in the foreground. |
-| review annotations | `agents/critic-style.md` + `skills/rule-harvest/SKILL.md` | `critic-style` enforces a repository's `STYLE.md` when one exists; `rule-harvest` turns `TODO`/`FIX`/`WARN`/`NOTE` annotations, including `NOTE(decision)`, into global `RULES.md` rules, managed skills, or memory. |
+| review annotations | `agents/critic-style.md` + `skills/rule-harvest/SKILL.md` | `critic-style` enforces a repository's `STYLE.md` when one exists; `rule-harvest` triages marker origin, discusses ambiguous clusters and conflicts with you, then proposes global `RULES.md` rules, managed skills, or memory. |
 
 `async.enabled` defaults to `true`, so the two critics return in the background and the user keeps talking to the implementer. The subtractor declares `blocking: true`, so nothing writes beside it.
 
