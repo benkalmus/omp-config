@@ -46,7 +46,7 @@ The opencode `permissions` block has no omp equivalent. omp restricts a task age
 
 ### Advisor
 
-The advisor is not a fourth critic. It attaches to the main session and steers the implementer back to the approved plan while the turn runs. The roster uses `reviewMode: turn`, `reviewInterval: 1`, and `syncBacklog: off`, so it never blocks the final answer. `modelRoles.advisor` maps to the cheap `smol` model. `critic-behavior` still owns the verdict.
+The advisor is not a fourth critic. It attaches to the main session and steers the implementer back to the approved plan while the turn runs. The roster uses `reviewMode: turn`, `reviewInterval: 1`, and `syncBacklog: off`, so it never blocks the final answer. Only a `blocker` interrupts a running turn. A `concern` waits for the next boundary. `modelRoles.advisor` maps to the cheap `smol` model. `critic-behavior` still owns the verdict.
 
 ## Keybindings
 
