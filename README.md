@@ -22,10 +22,32 @@ omp/.omp/agent/config.yml
 omp/.omp/agent/keybindings.yml
 omp/.omp/agent/agents/critic-behavior.md
 omp/.omp/agent/agents/critic-structure.md
+omp/.omp/agent/agents/critic-style.md
 omp/.omp/agent/agents/subtractor.md
+omp/.omp/agent/skills/style-harvest/SKILL.md
 ```
 
-Stow links each file into `~/.omp/agent/`. The Makefile passes `--no-folding`, so `~/.omp/agent` stays a real directory. omp writes databases and caches beside the stowed files.
+Stow links each file into `~/.omp/agent/` and `~/.config/hindsight/`. The Makefile passes `--no-folding`, so both parents stay real directories. omp writes databases and caches beside the stowed files.
+
+## Hindsight memory
+
+`omp/.config/hindsight/` tracks the Hindsight server deployment. Stow links it to `~/.config/hindsight/`, so a fresh machine reproduces it with `git clone && make stow`.
+
+```sh
+cd ~/.config/hindsight
+cp .env.example .env       # fill in HINDSIGHT_API_LLM_API_KEY (OpenRouter works)
+docker compose --env-file .env up -d
+curl -fsS http://localhost:8888/health
+```
+
+Only after the health check returns 200:
+
+```sh
+omp config set memory.backend hindsight
+omp config set hindsight.apiUrl http://localhost:8888
+```
+
+`.env` is gitignored; `.env.example` is tracked. The first image pull is about 9 GB.
 
 ## Author-critic loop
 
@@ -37,6 +59,7 @@ The opencode setup has one primary agent and three subagents. omp has no selecta
 | `critic-structure` (subagent) | `agents/critic-structure.md` | Read-only task agent, discovered by name. |
 | `critic-behavior` (subagent) | `agents/critic-behavior.md` | Read-only task agent with `bash` for test runs. |
 | `subtractor` (subagent) | `agents/subtractor.md` | Task agent with `blocking: true`, so it runs in the foreground. |
+| style annotations | `agents/critic-style.md` + `skills/style-harvest/SKILL.md` | `critic-style` enforces the repo's `STYLE.md` in the loop; `style-harvest` turns your `TODO(style)`/`FIX(style)`/`WARN(risk)`/`NOTE(intent)` annotations into that guide. |
 
 `async.enabled` defaults to `true`, so the two critics return in the background and the user keeps talking to the implementer. The subtractor declares `blocking: true`, so nothing writes beside it.
 

@@ -9,6 +9,7 @@ These instructions replace the default turn-taking and review policy for the mai
 | Agent | Execution | Access | Job |
 |---|---|---|---|
 | `critic-structure` | background | Read-only | Verifies every new name against the repository, returns removal and structure items, verdict `CLEAN` or `ITEMS` |
+| `critic-style` | background | Read-only | Checks the diff against the repository's `STYLE.md`, verdict `CLEAN` or `STYLE-GAPS`. Dispatched only when a style guide exists |
 | `critic-behavior` | background | Read-only, runs tests | Re-derives the criteria, reproduces every evidence row, returns breaks, verdict `GO` or `NO-GO` |
 | `subtractor` | foreground, `blocking: true` | Edits code and tests | Deletes, inlines, merges, renames, and refactors the survivor, including outside the diff |
 
@@ -199,7 +200,7 @@ Before dispatch, run every command. A missing criterion test is a handoff defect
 Readers run in the background. Writers run in the foreground. The user keeps your turn while a critic reads, and can ask questions, correct scope, or approve a small change. Never block on a review while the user is waiting.
 
 - Phase 4: dispatch one `task` item with `agent: critic-structure`. It runs in the background. Answer the user while it reads. When it returns, read the result from `agent://<id>`. Phase 5 takes the critic's items and the user's comments in one handoff.
-- Phases 6 and 7: dispatch one `task` batch with two items, `critic-structure` and `critic-behavior`. Both run in the background. The user reviews the diff in the same window.
+- Phases 6 and 7: dispatch one `task` batch with two items, `critic-structure` and `critic-behavior`. Add `critic-style` as a third item when a style guide exists and the subtractor changed files. All run in the background. The user reviews the diff in the same window.
 - `subtractor` declares `blocking: true`, so it blocks. Do not edit while it runs. Send it once, wait, then run the tests.
 - A small correction you make while a review is in flight stands. If the correction touches a file in the diff, that review is stale for that file. Re-dispatch it and name the file that changed.
 - A criterion the user changes during a review is settled before Phase 7. The behavior run uses the final list.
@@ -215,17 +216,25 @@ Require the critic to search every new name itself. Do not send your reuse repor
 
 Require the check log with the verdict. A review returned without it is unfinished, not `CLEAN`. Dispatch it again.
 
+When `STYLE.md` exists at the repository root, dispatch `critic-style` in the same background batch. Send it the original request, the criteria, the base commit, the change summary, the command list, and the style guide path. Send only those six.
+
+Require the check log with the style verdict. A review returned without it is unfinished, not `CLEAN`. Dispatch it again.
+
 ## Phase 5: subtraction
 
 Send items whose action is delete, inline, merge, or rename to `subtractor`, together with the user's comments from the Phase 4 window. It may refactor the survivor and other callers outside the diff. It returns exported renames.
 
 Resolve move, flatten, rewrite, and returned items yourself. Close `keep` items. Skip the phase when no items remain.
 
+Resolve style rows from `critic-style` yourself. Do not send them to the subtractor.
+
 ## Phase 6: structure re-check
 
 The subtractor edits files the structure pass never saw. Run the tests after subtraction. Fix a regression before Phase 7.
 
 Send `critic-structure` the subtraction summary, the base commit, and the criteria. Ask one question: did the subtraction introduce duplication, dead code, or a second vocabulary. The critic runs git itself.
+
+When a style guide exists, dispatch `critic-style` in the same background batch with the subtraction summary, the base commit, and the criteria. Ask one question: did the subtraction introduce a style gap.
 
 Require the check log again. An unfinished review is dispatched again.
 
