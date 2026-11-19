@@ -95,7 +95,7 @@ autolearn:
   enabled: true
 compaction:
   experimentalContextManagement: true
-  thresholdPercent: 35
+  thresholdPercent: 75
 dev:
   autoqaConsent: denied
 memory:
