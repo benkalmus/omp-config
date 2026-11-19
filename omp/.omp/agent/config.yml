@@ -96,3 +96,9 @@ autolearn:
 compaction:
   experimentalContextManagement: true
   thresholdPercent: 35
+dev:
+  autoqaConsent: denied
+memory:
+  backend: hindsight
+hindsight:
+  apiUrl: http://localhost:8888
