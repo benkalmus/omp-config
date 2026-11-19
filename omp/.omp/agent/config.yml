@@ -18,15 +18,13 @@ astGrep:
   enabled: true
 advisor:
   enabled: true
-# plan:
-#   defaultOnStartup: true
 symbolPreset: unicode
 composer:
   shape: pi
 theme:
   dark: titanium
   light: light
-setupVersion: 2
+setupVersion: 3
 statusLine:
   preset: default
   sessionAccent: true
@@ -86,3 +84,5 @@ bash:
     - match: rm -fr*
       approval: deny
 hideThinkingBlock: true
+update:
+  auto: false
