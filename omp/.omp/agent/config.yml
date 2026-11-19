@@ -93,3 +93,6 @@ checkpoint:
   enabled: true
 autolearn:
   enabled: true
+compaction:
+  experimentalContextManagement: true
+  thresholdPercent: 35
