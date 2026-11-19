@@ -24,7 +24,7 @@ omp/.omp/agent/agents/critic-behavior.md
 omp/.omp/agent/agents/critic-structure.md
 omp/.omp/agent/agents/critic-style.md
 omp/.omp/agent/agents/subtractor.md
-omp/.omp/agent/skills/style-harvest/SKILL.md
+omp/.omp/agent/skills/rule-harvest/SKILL.md
 ```
 
 Stow links each file into `~/.omp/agent/` and `~/.config/hindsight/`. The Makefile passes `--no-folding`, so both parents stay real directories. omp writes databases and caches beside the stowed files.
@@ -69,7 +69,7 @@ The opencode setup has one primary agent and three subagents. omp has no selecta
 | `critic-structure` (subagent) | `agents/critic-structure.md` | Read-only task agent, discovered by name. |
 | `critic-behavior` (subagent) | `agents/critic-behavior.md` | Read-only task agent with `bash` for test runs. |
 | `subtractor` (subagent) | `agents/subtractor.md` | Task agent with `blocking: true`, so it runs in the foreground. |
-| style annotations | `agents/critic-style.md` + `skills/style-harvest/SKILL.md` | `critic-style` enforces the repo's `STYLE.md` in the loop; `style-harvest` turns your `TODO(style)`/`FIX(style)`/`WARN(risk)`/`NOTE(intent)` annotations into that guide. |
+| review annotations | `agents/critic-style.md` + `skills/rule-harvest/SKILL.md` | `critic-style` enforces a repository's `STYLE.md` when one exists; `rule-harvest` turns `TODO`/`FIX`/`WARN`/`NOTE` annotations, including `NOTE(decision)`, into global `RULES.md` rules, managed skills, or memory. |
 
 `async.enabled` defaults to `true`, so the two critics return in the background and the user keeps talking to the implementer. The subtractor declares `blocking: true`, so nothing writes beside it.
 
