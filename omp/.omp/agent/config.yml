@@ -6,7 +6,7 @@ modelRoles:
   task: "@default"
   plan: "@slow"
 prewalk:
-  enabled: true
+  enabled: false
   auto: suggest
 ask:
   enabled: true
