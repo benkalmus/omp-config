@@ -6,7 +6,7 @@ modelRoles:
   task: "@default"
   plan: "@slow"
 prewalk:
-  enabled: false
+  enabled: true
   auto: suggest
 ask:
   enabled: true
@@ -14,6 +14,8 @@ ask:
 task:
   structured: true
   enableLsp: true
+  isolation:
+    enabled: true
 astGrep:
   enabled: true
 advisor:
@@ -83,6 +85,9 @@ bash:
       approval: deny
     - match: rm -fr*
       approval: deny
+  gitGuard: true
 hideThinkingBlock: true
 update:
   auto: false
+checkpoint:
+  enabled: true
